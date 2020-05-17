@@ -10,35 +10,46 @@ const url = process.env.URL
 const cloudwatch = new AWS.CloudWatch();
 
 exports.handler = async (event) => {
-  // TODO: Use these variables to record metric values
-  let endTime
-  let requestWasSuccessful
+    let endTime;
+    let requestWasSuccessful;
+    let latencyInMs;
 
-  const startTime = timeInMs()
-  await axios.get(url)
+    const startTime = timeInMs();
+    const res = await axios.get(url);
 
-  // Example of how to write a single data point
-  // await cloudwatch.putMetricData({
-  //   MetricData: [
-  //     {
-  //       MetricName: 'MetricName', // Use different metric names for different values, e.g. 'Latency' and 'Successful'
-  //       Dimensions: [
-  //         {
-  //           Name: 'ServiceName',
-  //           Value: serviceName
-  //         }
-  //       ],
-  //       Unit: '', // 'Count' or 'Milliseconds'
-  //       Value: 0 // Total value
-  //     }
-  //   ],
-  //   Namespace: 'Udacity/Serveless'
-  // }).promise()
+    requestWasSuccessful = res.status === 200 ? 1 : 0;
+    endTime = timeInMs();
+    latencyInMs = endTime - startTime;
 
-  // TODO: Record time it took to get a response
-  // TODO: Record if a response was successful or not
+    await cloudwatch.putMetricData({
+        MetricData: [
+            {
+                MetricName: 'Successful',
+                Dimensions: [
+                    {
+                        Name: 'ServiceName',
+                        Value: serviceName
+                    }
+                ],
+                Unit: 'Count',
+                Value: requestWasSuccessful
+            },
+            {
+                MetricName: 'Latency',
+                Dimensions: [
+                    {
+                        Name: 'ServiceName',
+                        Value: serviceName
+                    }
+                ],
+                Unit: 'Milliseconds',
+                Value: latencyInMs
+            }
+        ],
+        Namespace: 'Udacity/Serverless'
+    }).promise()
 }
 
 function timeInMs() {
-  return new Date().getTime()
+    return new Date().getTime()
 }
