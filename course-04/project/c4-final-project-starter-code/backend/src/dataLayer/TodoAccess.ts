@@ -63,6 +63,20 @@ export class TodoAccess {
   }
 
   /**
+   * Check whether a user owns a to-do and can therefore e.g. delete, update, etc.
+   */
+  async isUserOwnerOfTodo(todoId: string, userId: string): Promise<boolean> {
+    try {
+      await this.getTodo(todoId, userId)
+
+      return true
+    } catch (e) {
+
+      return false
+    }
+  }
+
+  /**
    * Create a new to-do for the logged in user.
    */
   async createTodo(todo: CreateTodoRequest, creatorUserId: string): Promise<TodoItem> {
@@ -125,7 +139,7 @@ export class TodoAccess {
   async deleteTodoIfOwner(todoId: string, updatingUserId: string): Promise<void> {
     logger.debug('Delete a to-do if it belongs to the logged in user.')
     // first check whether it's the logged-in user's to-do
-    this.getTodo(todoId, updatingUserId)
+    await this.getTodo(todoId, updatingUserId)
 
     await this.docClient.delete({
       TableName: this.todosTable,

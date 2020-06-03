@@ -157,6 +157,7 @@ functions:
       - Action:
           - dynamodb:GetItem
           - dynamodb:DeleteItem
+          - s3:DeleteObject
         Effect: Allow
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
       - Action:

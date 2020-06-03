@@ -15,19 +15,6 @@ export function parseUserIdFromJwtToken(jwtToken: string): string {
 }
 
 /**
- * Parse an authorization header and return the user id from the payload part.
- *
- * @param authorizationHeader Something like "Bearer: <token>"
- * @returns a user id from the JWT token
- */
-export function parseUserIdFromAuthorizationHeader(authorizationHeader: string): string {
-  const split = authorizationHeader.split(' ')
-  const jwtToken = split[1]
-
-  return parseUserIdFromJwtToken(jwtToken)
-}
-
-/**
  * Extracts the token part of the auth header (e.g. 123 from header "Authorization: Bearer 123") and throws errors when
  * format is incorrect.
  *
