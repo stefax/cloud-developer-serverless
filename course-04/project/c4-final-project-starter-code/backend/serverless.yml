@@ -50,13 +50,14 @@ custom:
         description: Serverless application for managing your todos
     # models are used for request validation with the RequestBodyValidator, see plugin above and config below and
     # https://www.serverless.com/plugins/serverless-reqvalidator-plugin/
+    # also see https://stackoverflow.com/a/49143822/2477404
     models:
       - name: CreateTodoRequest
         contentType: application/json
-        schema: ${file(models/create-todo-request.json)}
+        schema: ${file(models/CreateTodoRequest.json)}
       - name: UpdateTodoRequest
         contentType: application/json
-        schema: ${file(models/update-todo-request.json)}
+        schema: ${file(models/UpdateTodoRequest.json)}
 
 functions:
 
